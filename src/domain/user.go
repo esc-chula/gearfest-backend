@@ -4,6 +4,7 @@ type User struct {
 	UserID          string `gorm:"primaryKey"`
 	UserName        string
 	IsUserCompleted bool
+	CocktailID      uint
 	Checkins        []Checkin `gorm:"foreignKey:UserID;references:UserID"`
 }
 
