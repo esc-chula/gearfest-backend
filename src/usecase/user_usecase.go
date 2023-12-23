@@ -4,6 +4,7 @@ import (
 	"github.com/esc-chula/gearfest-backend/src/domain"
 	"github.com/esc-chula/gearfest-backend/src/interfaces"
 )
+
 type UserRepository struct {
 	interfaces.SqlHandler
 }

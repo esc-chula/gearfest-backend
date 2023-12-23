@@ -14,7 +14,7 @@ import (
 
 type Server struct {
 	router http.Handler
-	db *gorm.DB
+	db     *gorm.DB
 }
 
 func New() *Server {
@@ -23,7 +23,7 @@ func New() *Server {
 		fmt.Println("Error reading config.")
 		os.Exit(0)
 	}
-	
+
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
 		config.Database.Host,
 		config.Database.User,
@@ -43,16 +43,16 @@ func New() *Server {
 
 	sqlHandler := NewSqlHandler(db)
 
-	server := &Server {
+	server := &Server{
 		router: loadRoutes(sqlHandler),
-		db: db,
+		db:     db,
 	}
 	return server
 }
 
-func (s *Server)Start(ctx context.Context) error {
+func (s *Server) Start(ctx context.Context) error {
 	server := &http.Server{
-		Addr: ":8080",
+		Addr:    ":8080",
 		Handler: s.router,
 	}
 
@@ -61,7 +61,7 @@ func (s *Server)Start(ctx context.Context) error {
 	if err != nil {
 		fmt.Println("Failed to get database: ", err)
 		return err
-	} else if err=sqlDB.Ping(); err!=nil {
+	} else if err = sqlDB.Ping(); err != nil {
 		fmt.Println("Failed to check database connection: ", err)
 		return err
 	}
@@ -73,15 +73,15 @@ func (s *Server)Start(ctx context.Context) error {
 
 	w := make(chan error, 1)
 	go func() {
-		err:=server.ListenAndServe()
-		if err!=nil {
+		err := server.ListenAndServe()
+		if err != nil {
 			w <- err
 		}
 		close(w)
 	}()
 
 	select {
-	case e:=<-w:
+	case e := <-w:
 		fmt.Println("Error during Listen and Serve:", e)
 		return e
 	case <-ctx.Done():

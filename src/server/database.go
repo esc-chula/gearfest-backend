@@ -41,7 +41,7 @@ func (handler *SqlHandler) GetByPrimaryKey(obj interface{}) error {
 }
 
 func (handler *SqlHandler) GetWithAssociations(obj interface{}) error {
-	result :=handler.db.Session(&gorm.Session{}).Preload(clause.Associations).First(obj)
+	result := handler.db.Session(&gorm.Session{}).Preload(clause.Associations).First(obj)
 	if result.Error != nil {
 		return result.Error
 	}
