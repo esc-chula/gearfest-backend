@@ -22,3 +22,13 @@ func (usecase *UserUsecase) Get(id string) (domain.User, error) {
 	err := usecase.UserRepository.GetByPrimaryKey(&user)
 	return user, err
 }
+
+func (usecase *UserUsecase) Post(id string) (domain.Checkin, error) {
+	checkin := domain.Checkin{
+		UserID: id,
+	}
+
+	err := usecase.UserRepository.Create(&checkin)
+	return checkin, err
+}
+

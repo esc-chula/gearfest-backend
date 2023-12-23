@@ -4,6 +4,7 @@ import (
 	"github.com/esc-chula/gearfest-backend/src/interfaces"
 	"github.com/esc-chula/gearfest-backend/src/usecase"
 	"github.com/gin-gonic/gin"
+	"gtihub.com/esc-chula/gearfest-backend/src/domain"
 )
 
 type UserController struct {
@@ -30,4 +31,26 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(200, user)
+}
+
+func (controller *UserController) PostCheckin(ctx *gin.Context) {
+	id := ctx.Param("id")
+	
+	var newCheckin domain.Checkin
+	err := ctx.BindJSON(&newCheckin)
+	if err != nil {
+		ctx.AbortWithStatusJSON(400,gin.H{
+			"Message" : "Invalid JSON format"
+		})
+		return
+	}
+
+
+
+
+	
+	
+
+
+
 }

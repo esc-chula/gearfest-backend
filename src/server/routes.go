@@ -12,6 +12,8 @@ func loadRoutes(sqlHandler interfaces.SqlHandler) *gin.Engine {
 	//user routes (need to refactor soon)
 	user_controller := controller.NewUserController(sqlHandler)
 	g.GET("/user/:id", user_controller.GetUser)
+	//post checkin route
+	g.POST("/user/checkin/:id",user_controller.PostCheckin)
 
 	return g
 }
