@@ -1,0 +1,24 @@
+name: "Pull request/Push: Build test"
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  docker-build:
+    name: "Build docker image"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Docker
+        uses: docker/setup-docker@v2
+      - name: Build Docker Image
+        run: docker build -t gearfest-backend .
