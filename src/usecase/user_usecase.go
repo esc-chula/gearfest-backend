@@ -14,9 +14,11 @@ type UserUsecase struct {
 }
 
 func (usecase *UserUsecase) Get(id string) (domain.User, error) {
+	//pass user id so when send to UserRepository it'll find user with the id
 	user := domain.User{
 		UserID: id,
 	}
+	//send the value by address to assign all other field to user that we have created
 	err := usecase.UserRepository.GetByPrimaryKey(&user)
 	return user, err
 }
