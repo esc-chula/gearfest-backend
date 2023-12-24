@@ -38,7 +38,7 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	
 	//convert request into obj
 	var requestCheckin  domain.Checkin 
-	err := ctx.BindJSON(&requestCheckin)
+	err := ctx.ShouldBindJSON(&requestCheckin)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400,gin.H{
 			"Message" : "Invalid JSON format",
