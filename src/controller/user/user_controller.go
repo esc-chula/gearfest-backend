@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/esc-chula/gearfest-backend/src/domain"
 	"github.com/esc-chula/gearfest-backend/src/interfaces"
 	"github.com/esc-chula/gearfest-backend/src/usecase"
 	"github.com/gin-gonic/gin"
@@ -33,10 +34,9 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) PostCheckin(ctx *gin.Context) {
-	id := ctx.Param("id")
 	
 	//convert request into obj
-	var CheckinDTO  CreateCheckinDTO 
+	var CheckinDTO  domain.CreateCheckinDTO 
 	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400,gin.H{
@@ -44,15 +44,10 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 		})
 		return
 	}
-
-	//set UserID base on URL parameter
-	CheckinDTO.UserID = id
-
 	//post the obj to db using userId,LocationId (checkInId auto gen)
-	newCheckin,err := controller.UserUsecase.Post(CheckinDTO.UserID,CheckinDTO.LocationID)
+	newCheckin,err := controller.UserUsecase.Post(CheckinDTO)
 	
 	if err != nil {
-		
 		ctx.AbortWithStatusJSON(500,gin.H{
 			"Message" : "Internal server error",
 		})

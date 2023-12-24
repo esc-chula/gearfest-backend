@@ -23,11 +23,11 @@ func (usecase *UserUsecase) Get(id string) (domain.User, error) {
 	return user, err
 }
 
-func (usecase *UserUsecase) Post(userId string, locationId string) (domain.Checkin,error) {
+func (usecase *UserUsecase) Post(CheckinDTO domain.CreateCheckinDTO) (domain.Checkin,error) {
 
 	checkin := domain.Checkin{
-		UserID: userId,
-		LocationID: locationId,
+		UserID: CheckinDTO.UserID,
+		LocationID: CheckinDTO.LocationID,
 	
 	}
 
