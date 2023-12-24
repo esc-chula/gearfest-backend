@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/esc-chula/gearfest-backend/src/domain"
 	"github.com/esc-chula/gearfest-backend/src/interfaces"
 	"github.com/esc-chula/gearfest-backend/src/usecase"
 	"github.com/gin-gonic/gin"
@@ -37,8 +36,8 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	id := ctx.Param("id")
 	
 	//convert request into obj
-	var requestCheckin  domain.Checkin 
-	err := ctx.ShouldBindJSON(&requestCheckin)
+	var CheckinDTO  CreateCheckinDTO 
+	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400,gin.H{
 			"Message" : "Invalid JSON format",
@@ -47,10 +46,10 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	}
 
 	//set UserID base on URL parameter
-	requestCheckin.UserID = id
+	CheckinDTO.UserID = id
 
 	//post the obj to db using userId,LocationId (checkInId auto gen)
-	newCheckin,err := controller.UserUsecase.Post(id,requestCheckin.LocationID)
+	newCheckin,err := controller.UserUsecase.Post(CheckinDTO.UserID,CheckinDTO.LocationID)
 	
 	if err != nil {
 		
