@@ -39,7 +39,7 @@ func New() *Server {
 		fmt.Printf("Error connecting to the database: %v\n", err)
 		os.Exit(0)
 	}
-	db = db.Exec(fmt.Sprintf("SET search_path TO %s", config.Database.Schema))
+	db = db.Exec(fmt.Sprintf("SET search_path TO %s", config.Database.Schema)).Session(&gorm.Session{})
 
 	sqlHandler := NewSqlHandler(db)
 

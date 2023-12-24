@@ -18,7 +18,7 @@ func NewSqlHandler(db *gorm.DB) interfaces.SqlHandler {
 
 //Create obj in database
 func (handler *SqlHandler) Create(obj interface{}) error {
-	result := handler.db.Session(&gorm.Session{}).Create(obj)
+	result := handler.db.Create(obj)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -27,7 +27,7 @@ func (handler *SqlHandler) Create(obj interface{}) error {
 
 //Update column of obj in database with column_name and value
 func (handler *SqlHandler) UpdateColumn(obj interface{}, column_name string, value interface{}) error {
-	result := handler.db.Session(&gorm.Session{}).Model(&obj).Update(column_name, value)
+	result := handler.db.Model(&obj).Update(column_name, value)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -36,7 +36,7 @@ func (handler *SqlHandler) UpdateColumn(obj interface{}, column_name string, val
 
 //Get data of object by primary key
 func (handler *SqlHandler) GetByPrimaryKey(obj interface{}) error {
-	result := handler.db.Session(&gorm.Session{}).First(obj)
+	result := handler.db.First(obj)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -45,7 +45,7 @@ func (handler *SqlHandler) GetByPrimaryKey(obj interface{}) error {
 
 //Get data of object with associations
 func (handler *SqlHandler) GetWithAssociations(obj interface{}) error {
-	result := handler.db.Session(&gorm.Session{}).Preload(clause.Associations).First(obj)
+	result := handler.db.Preload(clause.Associations).First(obj)
 	if result.Error != nil {
 		return result.Error
 	}
