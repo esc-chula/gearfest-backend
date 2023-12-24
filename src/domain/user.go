@@ -5,12 +5,11 @@ type User struct {
 	UserName        string
 	IsUserCompleted bool
 	CocktailID      uint
-	Checkins        []Checkin `gorm:"foreignKey:UserID;references:UserID"`
+	Checkins        []Checkin
 }
 
 type Checkin struct {
-	Checkin    uint `gorm:"primaryKey"`
+	CheckinID   uint `gorm:"primaryKey;autoincrement"`
 	UserID     string
 	LocationID string
-	User       User `gorm:"foreignKey:UserID;references:UserID"`
 }
