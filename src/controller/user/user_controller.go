@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"github.com/esc-chula/gearfest-backend/src/domain"
 	"github.com/esc-chula/gearfest-backend/src/interfaces"
 	"github.com/esc-chula/gearfest-backend/src/usecase"
 	"github.com/gin-gonic/gin"
-	"gtihub.com/esc-chula/gearfest-backend/src/domain"
 )
 
 type UserController struct {
@@ -36,21 +36,38 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	id := ctx.Param("id")
 	
-	var newCheckin domain.Checkin
-	err := ctx.BindJSON(&newCheckin)
+	//convert request into obj
+	var requestCheckin  domain.Checkin 
+	err := ctx.BindJSON(&requestCheckin)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400,gin.H{
-			"Message" : "Invalid JSON format"
+			"Message" : "Invalid JSON format",
 		})
 		return
 	}
 
+	//set UserID base on URL parameter
+	requestCheckin.UserID = id
 
-
-
+	//post the obj to db using userId,LocationId (checkInId auto gen)
+	newCheckin,err := controller.UserUsecase.Post(id,requestCheckin.LocationID)
 	
-	
-
-
-
+	if err != nil {
+		
+		ctx.AbortWithStatusJSON(500,gin.H{
+			"Message" : "Internal server error",
+		})
+		
+		return
+	}
+	ctx.JSON(201,newCheckin)
 }
+
+
+
+
+	
+	
+
+
+

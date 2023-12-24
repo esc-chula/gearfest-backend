@@ -23,12 +23,15 @@ func (usecase *UserUsecase) Get(id string) (domain.User, error) {
 	return user, err
 }
 
-func (usecase *UserUsecase) Post(id string) (domain.Checkin, error) {
+func (usecase *UserUsecase) Post(userId string, locationId string) (domain.Checkin,error) {
+
 	checkin := domain.Checkin{
-		UserID: id,
+		UserID: userId,
+		LocationID: locationId,
+	
 	}
 
 	err := usecase.UserRepository.Create(&checkin)
-	return checkin, err
+	return checkin,err
 }
 
