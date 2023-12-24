@@ -10,15 +10,18 @@ Backend interface for the GearFestival website.
 
 ## Installation
 
-1. Clone this repo
+1. Clone this repo.
 2. Copy `config.local.yaml` in `config` and paste it in the same directory with `.local` removed from its name.
 3. Run `go mod download` to download all the dependencies.
 
 ## Running
 
 1. Run `supabase start` to start supabase.
+
+   > Note: You have to install [Docker](https://docs.docker.com/get-docker/) and [Supabase CLI](https://github.com/supabase/cli) before running this command.
+
 2. Run `go run ./src/` to start server.
-3. Server should be running on `localhost:8080`.
+3. Server should be running on `localhost:8080` and `localhost:54323/project/default/editor` for database editor.
 
 Ensure to run `supabase stop` to close supabase after finishing your code.
 
