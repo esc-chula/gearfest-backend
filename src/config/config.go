@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type DatabaseConfig struct {
+type SupabaseConfig struct {
 	Host     string `mapstructure:"host"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
@@ -18,7 +18,7 @@ type DatabaseConfig struct {
 }
 
 type Config struct {
-	Database DatabaseConfig
+	SupabaseConfig SupabaseConfig `mapstructure:"supabase"`
 }
 
 func New() (*Config, error) {
