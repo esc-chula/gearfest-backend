@@ -9,12 +9,12 @@ type User struct {
 }
 
 type Checkin struct {
-	CheckinID   uint `gorm:"primaryKey;autoincrement"`
+	CheckinID  uint `gorm:"primaryKey;autoincrement"`
 	UserID     string
 	LocationID string
 }
 
 type CreateCheckinDTO struct {
-	UserID string `json:"user_id" binding:"required"`
+	UserID     string `json:"user_id" binding:"required"`
 	LocationID string `json:"location_id" binding:"required"`
 }

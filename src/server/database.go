@@ -1,53 +1,30 @@
 package server
 
 import (
-	"github.com/esc-chula/gearfest-backend/src/interfaces"
+	"fmt"
+	"os"
+
+	"github.com/esc-chula/gearfest-backend/src/config"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
-type SqlHandler struct {
-	db *gorm.DB
-}
+func LoadSupabase(config config.SupabaseConfig) *gorm.DB {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		config.Host,
+		config.User,
+		config.Password,
+		config.DBName,
+		config.Port,
+		config.SSLMode,
+		config.Timezone,
+	)
 
-func NewSqlHandler(db *gorm.DB) interfaces.SqlHandler {
-	SqlHandler := new(SqlHandler)
-	SqlHandler.db = db
-	return SqlHandler
-}
-
-//Create obj in database
-func (handler *SqlHandler) Create(obj interface{}) error {
-	result := handler.db.Create(obj)
-	if result.Error != nil {
-		return result.Error
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Printf("Error connecting to the database: %v\n", err)
+		os.Exit(0)
 	}
-	return nil
-}
-
-//Update column of obj in database with column_name and value
-func (handler *SqlHandler) UpdateColumn(obj interface{}, column_name string, value interface{}) error {
-	result := handler.db.Model(&obj).Update(column_name, value)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-}
-
-//Get data of object by primary key
-func (handler *SqlHandler) GetByPrimaryKey(obj interface{}) error {
-	result := handler.db.First(obj)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
-}
-
-//Get data of object with associations
-func (handler *SqlHandler) GetWithAssociations(obj interface{}) error {
-	result := handler.db.Preload(clause.Associations).First(obj)
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
+	db = db.Exec(fmt.Sprintf("SET search_path TO %s", config.Schema)).Session(&gorm.Session{})
+	return db
 }
