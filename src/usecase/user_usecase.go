@@ -8,6 +8,7 @@ type UserRepository interface {
 	CreateUser(*domain.User) error
 	Checkin(*domain.Checkin) error
 	UpdateColumn(*domain.User, string, interface{}) error
+	UpdateMultipleColumns(*domain.User, map[string]interface{}) error
 	GetById(*domain.User, string) error
 	GetWithCheckins(*domain.User, string) error
 }

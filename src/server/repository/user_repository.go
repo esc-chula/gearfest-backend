@@ -34,9 +34,18 @@ func (repo *UserRepository) Checkin(checkin *domain.Checkin) error {
 	return nil
 }
 
-// Update column of user in database with column_name and value
+// Update a column of user in database with column_name and value
 func (repo *UserRepository) UpdateColumn(user *domain.User, column_name string, value interface{}) error {
 	result := repo.db.Model(user).Clauses(clause.Returning{}).Update(column_name, value)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+// Update some columns of user in database
+func (repo *UserRepository) UpdateMultipleColumns(user *domain.User, columns map[string]interface{}) error {
+	result := repo.db.Model(user).Clauses(clause.Returning{}).Updates(columns)
 	if result.Error != nil {
 		return result.Error
 	}
