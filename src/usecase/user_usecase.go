@@ -33,3 +33,28 @@ func (usecase *UserUsecase) Post(CheckinDTO domain.CreateCheckinDTO) (domain.Che
 	err := usecase.UserRepository.Checkin(&checkin)
 	return checkin, err
 }
+
+func (usecase *UserUsecase) PatchUser(id string, userDTO domain.CreateUserDTO) (domain.User, error)  {
+
+	var user domain.User
+	
+	var err error
+	switch  {
+	case userDTO.UserName != "":
+		{
+			err = usecase.UserRepository.UpdateColumn(&user,"user_name",userDTO)
+		}
+	case userDTO.IsUserCompleted != false:
+		{
+			err = usecase.UserRepository.UpdateColumn(&user,"completed",userDTO)
+		}
+	default : 
+		{
+
+		}
+	}	
+	return user, err
+	
+}
+	
+

@@ -53,3 +53,15 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	}
 	ctx.JSON(201, newCheckin)
 }
+
+func (controller *UserController) PatchUserName(ctx *gin.Context) {
+
+}
+
+func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
+
+}
+
+
+
+

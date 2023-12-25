@@ -18,3 +18,8 @@ type CreateCheckinDTO struct {
 	UserID     string `json:"user_id" binding:"required"`
 	LocationID uint   `json:"location_id" binding:"required"`
 }
+
+type CreateUserDTO struct {
+	UserName       string `json:"user_name"`
+	IsUserCompleted  bool `json:"user_completed"`
+}
