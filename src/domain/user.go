@@ -5,7 +5,7 @@ type User struct {
 	UserName        string
 	IsUserCompleted bool
 	CocktailID      uint
-	Checkins        []Checkin
+	Checkins        []Checkin	
 }
 
 type Checkin struct {
@@ -19,8 +19,9 @@ type CreateCheckinDTO struct {
 	LocationID uint   `json:"location_id" binding:"required"`
 }
 
-type CreateUserDTO struct {
-	UserID         string `json:"user_id"`
-	UserName       string `json:"user_name"`
-	IsUserCompleted  bool `json:"user_completed"`
+type CreateUserCompletedDTO struct {
+	IsUserCompleted  bool `json:"is_user_completed"`
+}
+type CreateUserNameDTO struct {
+	UserName  string `json:"user_name"`
 }
