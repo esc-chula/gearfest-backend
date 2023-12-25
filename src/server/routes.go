@@ -18,5 +18,5 @@ func loadUserRoutes(g *gin.Engine, db *gorm.DB) {
 	user_controller := controller.NewUserController(UserRepository)
 	g.GET("/user/:id", user_controller.GetUser)
 	//post checkin route
-	g.POST("/user/checkin/", user_controller.PostCheckin)
+	g.POST("/user/checkin", user_controller.PostCheckin)
 }
