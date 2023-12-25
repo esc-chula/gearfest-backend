@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/esc-chula/gearfest-backend/src/domain"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type UserRepository struct {
@@ -35,7 +36,7 @@ func (repo *UserRepository) Checkin(checkin *domain.Checkin) error {
 
 // Update column of user in database with column_name and value
 func (repo *UserRepository) UpdateColumn(user *domain.User, column_name string, value interface{}) error {
-	result := repo.db.Model(user).Update(column_name, value)
+	result := repo.db.Model(user).Clauses(clause.Returning{}).Update(column_name, value)
 	if result.Error != nil {
 		return result.Error
 	}

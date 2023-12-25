@@ -67,7 +67,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 		return	
 	}
 	//patch user in db using id,DTO
-	patchedUser,err := controller.UserUsecase.PatchUser(id,requestDTO)
+	patchedUser,err := controller.UserUsecase.PatchUserName(id,requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
 			"Message": "Internal server error",
@@ -91,7 +91,7 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 		return	
 	}
 	//patch user in db using id,DTO
-	patchedUser,err := controller.UserUsecase.PatchUser(id,requestDTO)
+	patchedUser,err := controller.UserUsecase.PatchUserComplete(id,requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
 			"Message": "Internal server error",

@@ -34,25 +34,28 @@ func (usecase *UserUsecase) Post(CheckinDTO domain.CreateCheckinDTO) (domain.Che
 	return checkin, err
 }
 
-func (usecase *UserUsecase) PatchUser(id string,userDTO interface{} ) (domain.User, error)  {
-
+func (usecase *UserUsecase) PatchUserComplete(id string,userDTO domain.CreateUserCompletedDTO ) (domain.User, error)  {
 	user := domain.User{
 		UserID: id,
+		UserName: "",
+		
 	}
-	
-	var err error
-	switch userDTO := userDTO.(type) {
-	case domain.CreateUserNameDTO :
-		{
-			err = usecase.UserRepository.UpdateColumn(&user,"user_name",userDTO.UserName)
-		}
-	case domain.CreateUserCompletedDTO :
-		{
-			err = usecase.UserRepository.UpdateColumn(&user,"is_user_completed",userDTO.IsUserCompleted)
-		}
-	}	
+	err := usecase.UserRepository.UpdateColumn(&user,"is_user_completed",userDTO.IsUserCompleted)
+	// if(err != nil) {return user,err}
+	// err = usecase.UserRepository.GetById(&user, id)
 	return user, err
 	
 }
+
+func (usecase *UserUsecase) PatchUserName(id string,userDTO domain.CreateUserNameDTO ) (domain.User, error)  {
+	user := domain.User{
+		UserID: id,
+		IsUserCompleted : false,
+	}
+	err := usecase.UserRepository.UpdateColumn(&user,"user_name",userDTO.UserName)
+	// if(err != nil) {return user,err}
+	// err = usecase.UserRepository.GetById(&user, id)
+	return user, err
 	
+}
 
