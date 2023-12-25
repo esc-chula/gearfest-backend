@@ -20,6 +20,7 @@ type CreateCheckinDTO struct {
 }
 
 type CreateUserDTO struct {
+	UserID         string `json:"user_id"`
 	UserName       string `json:"user_name"`
 	IsUserCompleted  bool `json:"user_completed"`
 }

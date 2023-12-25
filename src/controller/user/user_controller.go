@@ -54,13 +54,32 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	ctx.JSON(201, newCheckin)
 }
 
-func (controller *UserController) PatchUserName(ctx *gin.Context) {
+func (controller *UserController) PatchUser(ctx *gin.Context) {
+
+	//convert request into obj
+	var UserDTO domain.CreateUserDTO
+	err := ctx.ShouldBindJSON(&UserDTO)
+	if err != nil {
+		ctx.AbortWithStatusJSON(400, gin.H{
+			"Message": "Invalid JSON format",
+		})
+		return	
+	}
+	//patch user in db using id,DTO
+	patchedUser,err := controller.UserUsecase.PatchUser(UserDTO)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"Message": "Internal server error",
+		})
+
+		return
+	}
+	ctx.JSON(200,patchedUser)
 
 }
 
-func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 
-}
 
 
 
