@@ -35,25 +35,24 @@ func (usecase *UserUsecase) Post(CheckinDTO domain.CreateCheckinDTO) (domain.Che
 	return checkin, err
 }
 
-func (usecase *UserUsecase) PatchUserComplete(id string,userDTO domain.CreateUserCompletedDTO ) (domain.User, error)  {
-	user := domain.User{
-		UserID: id,		
-	}
-	updatingMap := map[string]interface{}{
-		"is_user_completed": userDTO.IsUserCompleted,
-		"cocktail_id": userDTO.CocktailID,
-	}
-	err := usecase.UserRepository.UpdateMultipleColumns(&user,updatingMap)
-	return user, err
-	
-}
-
-func (usecase *UserUsecase) PatchUserName(id string,userDTO domain.CreateUserNameDTO ) (domain.User, error)  {
+func (usecase *UserUsecase) PatchUserComplete(id string, userDTO domain.CreateUserCompletedDTO) (domain.User, error) {
 	user := domain.User{
 		UserID: id,
 	}
-	err := usecase.UserRepository.UpdateColumn(&user,"user_name",userDTO.UserName)
+	updatingMap := map[string]interface{}{
+		"is_user_completed": userDTO.IsUserCompleted,
+		"cocktail_id":       userDTO.CocktailID,
+	}
+	err := usecase.UserRepository.UpdateMultipleColumns(&user, updatingMap)
 	return user, err
-	
+
 }
 
+func (usecase *UserUsecase) PatchUserName(id string, userDTO domain.CreateUserNameDTO) (domain.User, error) {
+	user := domain.User{
+		UserID: id,
+	}
+	err := usecase.UserRepository.UpdateColumn(&user, "user_name", userDTO.UserName)
+	return user, err
+
+}
