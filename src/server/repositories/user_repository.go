@@ -35,26 +35,26 @@ func (repo *UserRepository) Checkin(checkin *domains.Checkin) error {
 }
 
 // Update a column of user in database with column_name and value
-func (repo *UserRepository) UpdateField(user *domains.User, column_name string, value interface{}) error {
-	result := repo.db.Model(user).Clauses(clause.Returning{}).Update(column_name, value)
+func (repo *UserRepository) UpdateField(user *domains.User, id string, column_name string, value interface{}) error {
+	result := repo.db.Model(&domains.User{}).Where("user_id = ?", id).Update(column_name, value)
 	if result.Error != nil {
 		return result.Error
 	}
-	return nil
+	return repo.GetById(user, id)
 }
 
 // Update some columns of user in database
-func (repo *UserRepository) UpdateFields(user *domains.User, columns map[string]interface{}) error {
-	result := repo.db.Model(user).Clauses(clause.Returning{}).Updates(columns)
+func (repo *UserRepository) UpdateFields(user *domains.User, id string, columns map[string]interface{}) error {
+	result := repo.db.Model(&domains.User{}).Where("user_id = ? ", id).Updates(columns)
 	if result.Error != nil {
 		return result.Error
 	}
-	return nil
+	return repo.GetById(user, id)
 }
 
 // Get user by id
 func (repo *UserRepository) GetById(user *domains.User, id string) error {
-	result := repo.db.Model(&domains.User{}).Preload("*").First(user, "user_id = ?", id)
+	result := repo.db.Model(&domains.User{}).Preload(clause.Associations).First(user, "user_id = ?", id)
 	if result.Error != nil {
 		return result.Error
 	}

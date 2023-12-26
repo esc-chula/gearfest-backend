@@ -5,8 +5,8 @@ import "github.com/esc-chula/gearfest-backend/src/domains"
 type UserRepository interface {
 	CreateUser(*domains.User) error
 	Checkin(*domains.Checkin) error
-	UpdateField(*domains.User, string, interface{}) error
-	UpdateFields(*domains.User, map[string]interface{}) error
+	UpdateField(*domains.User, string, string, interface{}) error
+	UpdateFields(*domains.User, string, map[string]interface{}) error
 	GetById(*domains.User, string) error
 }
 
@@ -32,14 +32,12 @@ func (usecase *UserUsecases) Post(CheckinDTO domains.CreateCheckinDTO) (domains.
 }
 
 func (usecase *UserUsecases) PatchUserComplete(id string, userDTO domains.CreateUserCompletedDTO) (domains.User, error) {
-	user := domains.User{
-		UserID: id,
-	}
+	user := domains.User{}
 	updatingMap := map[string]interface{}{
 		"is_user_completed": userDTO.IsUserCompleted,
 		"cocktail_id":       userDTO.CocktailID,
 	}
-	err := usecase.UserRepository.UpdateFields(&user, updatingMap)
+	err := usecase.UserRepository.UpdateFields(&user, id, updatingMap)
 	return user, err
 
 }
@@ -48,7 +46,7 @@ func (usecase *UserUsecases) PatchUserName(id string, userDTO domains.CreateUser
 	user := domains.User{
 		UserID: id,
 	}
-	err := usecase.UserRepository.UpdateField(&user, "user_name", userDTO.UserName)
+	err := usecase.UserRepository.UpdateField(&user, id, "user_name", userDTO.UserName)
 	return user, err
 
 }

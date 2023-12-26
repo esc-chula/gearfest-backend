@@ -8,4 +8,5 @@ alter table "public"."checkins" add constraint "checkins_location_id_check" CHEC
 
 alter table "public"."checkins" validate constraint "checkins_location_id_check";
 
-
+ALTER TABLE "public"."checkins"
+ADD CONSTRAINT unique_user_location UNIQUE (user_id, location_id);
