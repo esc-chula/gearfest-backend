@@ -54,10 +54,12 @@ Ensure to run `supabase stop` to close supabase after finishing your code.
 1. Wait for the code to be reviewed and merged
 1. Repeat
 
-   > Note: Don't forget to always pull the latest changes from the dev branch before creating a new branch.
+   > Note: Don't forget to always pull the latest changes from the dev branch and apply migrations on supabase before creating a new branch.
    >
    > ```bash
    > git pull origin dev
+   >
+   > supabase db reset
    > ```
 
 ### Conventional Commit Format
