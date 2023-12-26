@@ -34,9 +34,19 @@ func (repo *UserRepository) Checkin(checkin *domains.Checkin) error {
 	return nil
 }
 
+// Check if user has completed form
+func (repo *UserRepository) GetField(id string, field string) (bool, error) {
+	user := domains.User{}
+	result := repo.db.Select(field).First(&user, "user_id = ?", id)
+	if result.Error != nil {
+		return false, result.Error
+	}
+	return user.IsUserCompleted, nil
+}
+
 // Update a column of user in database with column_name and value
-func (repo *UserRepository) UpdateField(user *domains.User, id string, column_name string, value interface{}) error {
-	result := repo.db.Model(&domains.User{}).Where("user_id = ?", id).Update(column_name, value)
+func (repo *UserRepository) UpdateField(user *domains.User, id string, field string, value interface{}) error {
+	result := repo.db.Model(&domains.User{}).Where("user_id = ?", id).Update(field, value)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -44,8 +54,8 @@ func (repo *UserRepository) UpdateField(user *domains.User, id string, column_na
 }
 
 // Update some columns of user in database
-func (repo *UserRepository) UpdateFields(user *domains.User, id string, columns map[string]interface{}) error {
-	result := repo.db.Model(&domains.User{}).Where("user_id = ? ", id).Updates(columns)
+func (repo *UserRepository) UpdateFields(user *domains.User, id string, fields map[string]interface{}) error {
+	result := repo.db.Model(&domains.User{}).Where("user_id = ? ", id).Updates(fields)
 	if result.Error != nil {
 		return result.Error
 	}

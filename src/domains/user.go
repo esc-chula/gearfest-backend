@@ -20,7 +20,6 @@ type CreateCheckinDTO struct {
 }
 
 type CreateUserCompletedDTO struct {
-	IsUserCompleted bool `json:"is_user_completed" binding:"required"`
 	CocktailID      uint `json:"cocktail_id" binding:"required"`
 }
 type CreateUserNameDTO struct {

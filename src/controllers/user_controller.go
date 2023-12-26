@@ -81,9 +81,21 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 
 	id := ctx.Param("id")
+	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
+	if err != nil {
+		ctx.AbortWithStatusJSON(404, gin.H{
+			"Message": "User not found",
+		})
+		return
+	} else if isUserCompleted {
+		ctx.AbortWithStatusJSON(403, gin.H{
+			"Message": "User has already completed",
+		})
+		return
+	}
 	//convert request into obj
 	var requestDTO domains.CreateUserCompletedDTO
-	err := ctx.ShouldBindJSON(&requestDTO)
+	err = ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
 			"Message": "Invalid JSON format",
