@@ -35,13 +35,13 @@ func (repo *UserRepository) Checkin(checkin *domains.Checkin) error {
 }
 
 // Get the chosen field from user
-func (repo *UserRepository) GetField(id string, field string) (bool, error) {
-	user := domains.User{}
-	result := repo.db.Select(field).First(&user, "user_id = ?", id)
+func (repo *UserRepository) GetField(id string, field string) (*domains.User, error) {
+	user := &domains.User{}
+	result := repo.db.Select(field).First(user, "user_id = ?", id)
 	if result.Error != nil {
-		return false, result.Error
+		return user, result.Error
 	}
-	return user.IsUserCompleted, nil
+	return user, nil
 }
 
 // Update a column of user in database with column_name and value
