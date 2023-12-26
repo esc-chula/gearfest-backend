@@ -34,7 +34,7 @@ func (repo *UserRepository) Checkin(checkin *domains.Checkin) error {
 	return nil
 }
 
-// Check if user has completed form
+// Get the chosen field from user
 func (repo *UserRepository) GetField(id string, field string) (bool, error) {
 	user := domains.User{}
 	result := repo.db.Select(field).First(&user, "user_id = ?", id)
