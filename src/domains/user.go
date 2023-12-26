@@ -1,4 +1,4 @@
-package domain
+package domains
 
 type User struct {
 	UserID          string `gorm:"primaryKey"`

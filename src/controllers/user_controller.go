@@ -1,18 +1,18 @@
-package controller
+package controllers
 
 import (
-	"github.com/esc-chula/gearfest-backend/src/domain"
-	"github.com/esc-chula/gearfest-backend/src/usecase"
+	"github.com/esc-chula/gearfest-backend/src/domains"
+	"github.com/esc-chula/gearfest-backend/src/usecases"
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	UserUsecase usecase.UserUsecase
+	UserUsecases usecases.UserUsecases
 }
 
-func NewUserController(repository usecase.UserRepository) *UserController {
+func NewUserController(repository usecases.UserRepository) *UserController {
 	return &UserController{
-		UserUsecase: usecase.UserUsecase{
+		UserUsecases: usecases.UserUsecases{
 			UserRepository: repository,
 		},
 	}
@@ -20,7 +20,7 @@ func NewUserController(repository usecase.UserRepository) *UserController {
 
 func (controller *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
-	user, err := controller.UserUsecase.Get(id)
+	user, err := controller.UserUsecases.Get(id)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
 			"Message": "Bad request",
@@ -33,7 +33,7 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 func (controller *UserController) PostCheckin(ctx *gin.Context) {
 
 	//convert request into obj
-	var CheckinDTO domain.CreateCheckinDTO
+	var CheckinDTO domains.CreateCheckinDTO
 	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
@@ -42,7 +42,7 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 		return
 	}
 	//post the obj to db using userId,LocationId (checkInId auto gen)
-	newCheckin, err := controller.UserUsecase.Post(CheckinDTO)
+	newCheckin, err := controller.UserUsecases.Post(CheckinDTO)
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
@@ -58,7 +58,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 
 	id := ctx.Param("id")
 	//convert request into obj
-	var requestDTO domain.CreateUserNameDTO
+	var requestDTO domains.CreateUserNameDTO
 	err := ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
@@ -67,7 +67,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 		return
 	}
 	//patch user in db using id,DTO
-	patchedUser, err := controller.UserUsecase.PatchUserName(id, requestDTO)
+	patchedUser, err := controller.UserUsecases.PatchUserName(id, requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
 			"Message": "Internal server error",
@@ -82,7 +82,7 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 
 	id := ctx.Param("id")
 	//convert request into obj
-	var requestDTO domain.CreateUserCompletedDTO
+	var requestDTO domains.CreateUserCompletedDTO
 	err := ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
@@ -91,7 +91,7 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 		return
 	}
 	//patch user in db using id,DTO
-	patchedUser, err := controller.UserUsecase.PatchUserComplete(id, requestDTO)
+	patchedUser, err := controller.UserUsecases.PatchUserComplete(id, requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
 			"Message": "Internal server error",
