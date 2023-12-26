@@ -23,7 +23,7 @@ Backend interface for the GearFestival website.
 2. Run `go run ./src/` to start server.
 3. Server should be running on `localhost:8080` and `localhost:54323/project/default/editor` for database editor.
 
-Ensure to run `supabase stop` to close supabase after finishing your code.
+Ensure to run `supabase stop` to close supabase after finishing your code. If there are migrations that haven't been applied to supabase, please run `supabase db reset` to apply migrations.
 
 ## Contributing
 
