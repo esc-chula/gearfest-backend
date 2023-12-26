@@ -37,13 +37,13 @@ func (usecase *UserUsecase) Post(CheckinDTO domain.CreateCheckinDTO) (domain.Che
 
 func (usecase *UserUsecase) PatchUserComplete(id string,userDTO domain.CreateUserCompletedDTO ) (domain.User, error)  {
 	user := domain.User{
-		UserID: id,
-		UserName: "",
-		
+		UserID: id,		
 	}
-	err := usecase.UserRepository.UpdateColumn(&user,"is_user_completed",userDTO.IsUserCompleted)
-	// if(err != nil) {return user,err}
-	// err = usecase.UserRepository.GetById(&user, id)
+	updatingMap := map[string]interface{}{
+		"is_user_completed": userDTO.IsUserCompleted,
+		"cocktail_id": userDTO.CocktailID,
+	}
+	err := usecase.UserRepository.UpdateMultipleColumns(&user,updatingMap)
 	return user, err
 	
 }
@@ -51,11 +51,8 @@ func (usecase *UserUsecase) PatchUserComplete(id string,userDTO domain.CreateUse
 func (usecase *UserUsecase) PatchUserName(id string,userDTO domain.CreateUserNameDTO ) (domain.User, error)  {
 	user := domain.User{
 		UserID: id,
-		IsUserCompleted : false,
 	}
 	err := usecase.UserRepository.UpdateColumn(&user,"user_name",userDTO.UserName)
-	// if(err != nil) {return user,err}
-	// err = usecase.UserRepository.GetById(&user, id)
 	return user, err
 	
 }
