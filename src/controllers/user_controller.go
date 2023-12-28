@@ -4,6 +4,7 @@ import (
 	"github.com/esc-chula/gearfest-backend/src/domains"
 	"github.com/esc-chula/gearfest-backend/src/usecases"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type UserController struct {
@@ -21,13 +22,22 @@ func NewUserController(repository usecases.UserRepository) *UserController {
 func (controller *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	user, err := controller.UserUsecases.Get(id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Bad request",
+	switch err {
+	case nil:
+		ctx.JSON(200, gin.H{
+			"data": gin.H{
+				"user": user,
+			},
 		})
-		return
+	case gorm.ErrRecordNotFound:
+		ctx.AbortWithStatusJSON(404, gin.H{
+			"error": "User not found.",
+		})
+	default:
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"error": "Internal server error.",
+		})
 	}
-	ctx.JSON(200, user)
 }
 
 func (controller *UserController) PostCheckin(ctx *gin.Context) {
@@ -37,21 +47,32 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
+			"error": "Invalid JSON format.",
 		})
 		return
 	}
 	//post the obj to db using userId,LocationId (checkInId auto gen)
 	newCheckin, err := controller.UserUsecases.Post(CheckinDTO)
-
-	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
+	switch err {
+	case nil:
+		ctx.JSON(201, gin.H{
+			"data": gin.H{
+				"checkin": newCheckin,
+			},
 		})
-
-		return
+	case gorm.ErrForeignKeyViolated:
+		ctx.AbortWithStatusJSON(404, gin.H{
+			"error": "User not found.",
+		})
+	case gorm.ErrDuplicatedKey:
+		ctx.AbortWithStatusJSON(409, gin.H{
+			"error": "User is already checked in.",
+		})
+	default:
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"error": "Internal server error.",
+		})
 	}
-	ctx.JSON(201, newCheckin)
 }
 
 func (controller *UserController) PatchUserName(ctx *gin.Context) {
@@ -62,19 +83,28 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
+			"error": "Invalid JSON format.",
 		})
 		return
 	}
 	//patch user in db using id,DTO
 	patchedUser, err := controller.UserUsecases.PatchUserName(id, requestDTO)
-	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
+	switch err {
+	case nil:
+		ctx.JSON(200, gin.H{
+			"data": gin.H{
+				"user": patchedUser,
+			},
 		})
-		return
+	case gorm.ErrRecordNotFound:
+		ctx.AbortWithStatusJSON(404, gin.H{
+			"error": "User not found.",
+		})
+	default:
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"error": "Internal server error.",
+		})
 	}
-	ctx.JSON(200, patchedUser)
 
 }
 
@@ -82,23 +112,29 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 
 	id := ctx.Param("id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
-	if err != nil {
+	switch err {
+	case nil:
+		if isUserCompleted {
+			ctx.AbortWithStatusJSON(403, gin.H{
+				"error": "User has already completed.",
+			})
+			return
+		}
+	case gorm.ErrRecordNotFound:
 		ctx.AbortWithStatusJSON(404, gin.H{
-			"Message": "User not found",
+			"error": "User not found.",
 		})
-		return
-	} else if isUserCompleted {
-		ctx.AbortWithStatusJSON(403, gin.H{
-			"Message": "User has already completed",
+	default:
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"error": "Internal server error.",
 		})
-		return
 	}
 	//convert request into obj
 	var requestDTO domains.CreateUserCompletedDTO
 	err = ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
+			"error": "Invalid JSON format.",
 		})
 		return
 	}
@@ -106,10 +142,13 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 	patchedUser, err := controller.UserUsecases.PatchUserComplete(id, requestDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
+			"error": "Internal server error.",
 		})
 		return
 	}
-	ctx.JSON(200, patchedUser)
-
+	ctx.JSON(200, gin.H{
+		"data": gin.H{
+			"user": patchedUser,
+		},
+	})
 }

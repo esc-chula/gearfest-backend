@@ -13,7 +13,6 @@ type SupabaseConfig struct {
 	DBName   string `mapstructure:"dbname"`
 	Port     string `mapstructure:"port"`
 	SSLMode  string `mapstructure:"sslmode"`
-	Timezone string `mapstructure:"timezone"`
 	Schema   string `mapstructure:"schema"`
 }
 

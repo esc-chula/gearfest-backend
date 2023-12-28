@@ -10,17 +10,16 @@ import (
 )
 
 func LoadSupabase(config config.SupabaseConfig) *gorm.DB {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		config.Host,
 		config.User,
 		config.Password,
 		config.DBName,
 		config.Port,
 		config.SSLMode,
-		config.Timezone,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{TranslateError: true})
 	if err != nil {
 		fmt.Printf("Error connecting to the database: %v\n", err)
 		os.Exit(0)
