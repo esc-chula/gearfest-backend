@@ -1,17 +1,24 @@
 package server
 
 import (
-	controller "github.com/esc-chula/gearfest-backend/src/controller/user"
-	"github.com/esc-chula/gearfest-backend/src/interfaces"
+	"github.com/esc-chula/gearfest-backend/src/controllers"
+	"github.com/esc-chula/gearfest-backend/src/server/repositories"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func loadRoutes(sqlHandler interfaces.SqlHandler) *gin.Engine {
+func loadRoutes(db *gorm.DB) *gin.Engine {
 	g := gin.New()
-
-	//user routes (need to refactor soon)
-	user_controller := controller.NewUserController(sqlHandler)
-	g.GET("/user/:id", user_controller.GetUser)
-
+	userRoutes := g.Group("/user")
+	loadUserRoutes(userRoutes, db)
 	return g
+}
+
+func loadUserRoutes(g *gin.RouterGroup, db *gorm.DB) {
+	UserRepository := repositories.NewUserRepository(db)
+	UserController := controllers.NewUserController(UserRepository)
+	g.GET("/:id", UserController.GetUser)
+	g.POST("/checkin", UserController.PostCheckin)
+	g.PATCH("/complete/:id", UserController.PatchUserComplete)
+	g.PATCH("/name/:id", UserController.PatchUserName)
 }

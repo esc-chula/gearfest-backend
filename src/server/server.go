@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/esc-chula/gearfest-backend/src/config"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -24,27 +23,10 @@ func New() *Server {
 		os.Exit(0)
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		config.Database.Host,
-		config.Database.User,
-		config.Database.Password,
-		config.Database.DBName,
-		config.Database.Port,
-		config.Database.SSLMode,
-		config.Database.Timezone,
-	)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Printf("Error connecting to the database: %v\n", err)
-		os.Exit(0)
-	}
-	db = db.Exec(fmt.Sprintf("SET search_path TO %s", config.Database.Schema))
-
-	sqlHandler := NewSqlHandler(db)
+	db := LoadSupabase(config.SupabaseConfig)
 
 	server := &Server{
-		router: loadRoutes(sqlHandler),
+		router: loadRoutes(db),
 		db:     db,
 	}
 	return server
