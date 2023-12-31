@@ -21,6 +21,7 @@ func (usecase *UserUsecases) Get(id string) (domains.User, error) {
 	return user, err
 }
 
+//create user
 func (usecase *UserUsecases) PostCreateUser(inputUser domains.CreateUser) (domains.User, error) {
 
 	newUser := domains.User{
