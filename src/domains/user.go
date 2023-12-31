@@ -14,6 +14,11 @@ type Checkin struct {
 	LocationID uint
 }
 
+type CreateUser struct {
+	UserID   string `json:"user_id" binding:"required"`
+	UserName string `json:"user_name" binding:"required"`
+}
+
 type CreateCheckinDTO struct {
 	UserID     string `json:"user_id" binding:"required"`
 	LocationID uint   `json:"location_id" binding:"required"`

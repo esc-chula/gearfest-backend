@@ -21,6 +21,17 @@ func (usecase *UserUsecases) Get(id string) (domains.User, error) {
 	return user, err
 }
 
+func (usecase *UserUsecases) PostCreateUser(inputUser domains.CreateUser) (domains.User, error) {
+
+	newUser := domains.User{
+		UserID:   inputUser.UserID,
+		UserName: inputUser.UserName,
+	}
+
+	err := usecase.UserRepository.CreateUser(&newUser)
+	return newUser, err
+}
+
 func (usecase *UserUsecases) Post(CheckinDTO domains.CreateCheckinDTO) (domains.Checkin, error) {
 
 	checkin := domains.Checkin{
