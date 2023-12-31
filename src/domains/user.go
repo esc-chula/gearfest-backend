@@ -14,7 +14,6 @@ type Checkin struct {
 	LocationID uint
 }
 
-// create user
 type CreateUser struct {
 	UserID   string `json:"user_id" binding:"required"`
 	UserName string `json:"user_name" binding:"required"`

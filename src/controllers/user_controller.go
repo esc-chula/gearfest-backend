@@ -30,7 +30,6 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 	ctx.JSON(200, user)
 }
 
-// create post users
 func (controller *UserController) PostUser(ctx *gin.Context) {
 
 	//convert request into obj
