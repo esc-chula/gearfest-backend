@@ -6,7 +6,7 @@ func HandleErrorResponse(ctx *gin.Context, statusCode int, errorMessage string) 
 	ctx.AbortWithStatusJSON(statusCode, gin.H{
 		"success": false,
 		"error": gin.H{
-			"code": statusCode,
+			"code":    statusCode,
 			"message": errorMessage,
 		},
 	})
@@ -15,6 +15,6 @@ func HandleErrorResponse(ctx *gin.Context, statusCode int, errorMessage string) 
 func RespondWithData(ctx *gin.Context, statusCode int, data gin.H) {
 	ctx.JSON(statusCode, gin.H{
 		"success": true,
-		"data": data,
+		"data":    data,
 	})
 }
