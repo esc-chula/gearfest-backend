@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/esc-chula/gearfest-backend/src/domains"
 	"github.com/esc-chula/gearfest-backend/src/usecases"
+	"github.com/esc-chula/gearfest-backend/src/utils"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type UserController struct {
@@ -21,13 +25,14 @@ func NewUserController(repository usecases.UserRepository) *UserController {
 func (controller *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	user, err := controller.UserUsecases.Get(id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Bad request",
-		})
-		return
+	switch err {
+	case nil:
+		utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": user})
+	case gorm.ErrRecordNotFound:
+		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+	default:
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
-	ctx.JSON(200, user)
 }
 
 func (controller *UserController) PostUser(ctx *gin.Context) {
@@ -60,22 +65,21 @@ func (controller *UserController) PostCheckin(ctx *gin.Context) {
 	var CheckinDTO domains.CreateCheckinDTO
 	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
-		})
+		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
 	//post the obj to db using userId,LocationId (checkInId auto gen)
 	newCheckin, err := controller.UserUsecases.Post(CheckinDTO)
-
-	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
-		})
-
-		return
+	switch err {
+	case nil:
+		utils.RespondWithData(ctx, http.StatusCreated, gin.H{"checkin": newCheckin})
+	case gorm.ErrForeignKeyViolated:
+		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+	case gorm.ErrDuplicatedKey:
+		utils.HandleErrorResponse(ctx, http.StatusConflict, "User is already checked in.")
+	default:
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
-	ctx.JSON(201, newCheckin)
 }
 
 func (controller *UserController) PatchUserName(ctx *gin.Context) {
@@ -85,20 +89,19 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 	var requestDTO domains.CreateUserNameDTO
 	err := ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
-		})
+		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
 	//patch user in db using id,DTO
 	patchedUser, err := controller.UserUsecases.PatchUserName(id, requestDTO)
-	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
-		})
-		return
+	switch err {
+	case nil:
+		utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": patchedUser})
+	case gorm.ErrRecordNotFound:
+		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+	default:
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
-	ctx.JSON(200, patchedUser)
 
 }
 
@@ -106,34 +109,29 @@ func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
 
 	id := ctx.Param("id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(404, gin.H{
-			"Message": "User not found",
-		})
-		return
-	} else if isUserCompleted {
-		ctx.AbortWithStatusJSON(403, gin.H{
-			"Message": "User has already completed",
-		})
-		return
+	switch err {
+	case nil:
+		if isUserCompleted {
+			utils.HandleErrorResponse(ctx, http.StatusForbidden, "User has already completed.")
+			return
+		}
+	case gorm.ErrRecordNotFound:
+		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+	default:
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
 	//convert request into obj
 	var requestDTO domains.CreateUserCompletedDTO
 	err = ctx.ShouldBindJSON(&requestDTO)
 	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
-		})
+		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
 	//patch user in db using id,DTO
 	patchedUser, err := controller.UserUsecases.PatchUserComplete(id, requestDTO)
 	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
-		})
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 		return
 	}
-	ctx.JSON(200, patchedUser)
-
+	utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": patchedUser})
 }
