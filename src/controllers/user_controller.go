@@ -35,6 +35,30 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 	}
 }
 
+func (controller *UserController) PostUser(ctx *gin.Context) {
+
+	//convert request into obj
+	var inputUser domains.CreateUser
+	err := ctx.ShouldBindJSON(&inputUser)
+	if err != nil {
+		ctx.AbortWithStatusJSON(400, gin.H{
+			"Message": "Invalid JSON format",
+		})
+		return
+	}
+	//post the obj to db using userId,LocationId (checkInId auto gen)
+	newUser, err := controller.UserUsecases.PostCreateUser(inputUser)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(500, gin.H{
+			"Message": "Internal server error",
+		})
+
+		return
+	}
+	ctx.JSON(201, newUser)
+}
+
 func (controller *UserController) PostCheckin(ctx *gin.Context) {
 
 	//convert request into obj
