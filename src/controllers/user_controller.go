@@ -43,16 +43,21 @@ func (controller *UserController) SignIn(ctx *gin.Context) {
 		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
-	newUser, err := controller.UserUsecases.PostCreateUser(inputUser)
-
-	if err != nil {
-		ctx.AbortWithStatusJSON(500, gin.H{
-			"Message": "Internal server error",
-		})
-
-		return
+	user, err := controller.UserUsecases.Get(inputUser.UserID)
+	if err == gorm.ErrRecordNotFound {
+		//Not found then create new user
+		newUser, err := controller.UserUsecases.PostCreateUser(inputUser)
+		if err != nil {
+			utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
+			return
+		}
+		utils.RespondWithData(ctx, http.StatusCreated, gin.H{"user": newUser})
+	} else if err == nil {
+		//Found user return user
+		utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": user})
+	} else {
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
-	ctx.JSON(201, newUser)
 }
 
 func (controller *UserController) Checkin(ctx *gin.Context) {
