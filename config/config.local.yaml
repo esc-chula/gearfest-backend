@@ -1,9 +1,10 @@
-database:
+supabase:
   host: 127.0.0.1
   user: postgres
   password: postgres
   dbname: postgres
   port: "54322"
   sslmode: disable
-  timezone: Asia/Shanghai
   schema: public
+google:
+  client_id: <client_id>

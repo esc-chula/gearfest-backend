@@ -1,0 +1,302 @@
+definitions:
+  domains.CreateCheckinDTO:
+    properties:
+      location_id:
+        type: integer
+    required:
+    - location_id
+    type: object
+  domains.CreateUserCompletedDTO:
+    properties:
+      cocktail_id:
+        type: integer
+    required:
+    - cocktail_id
+    type: object
+  domains.CreateUserNameDTO:
+    properties:
+      user_name:
+        type: string
+    required:
+    - user_name
+    type: object
+  utils.Error:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  utils.ErrorResponse:
+    properties:
+      error:
+        $ref: '#/definitions/utils.Error'
+      success:
+        type: boolean
+    type: object
+  utils.SuccessResponse:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      success:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: API for the GearFestival website
+  title: Gearfest API
+  version: "1.0"
+paths:
+  /user:
+    get:
+      description: Get user data domains.User.
+      operationId: GetUser
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get user
+      tags:
+      - user
+  /user/checkin:
+    post:
+      consumes:
+      - application/json
+      description: Check in user with location id.
+      operationId: Checkin
+      parameters:
+      - description: Location id to be checked in.
+        in: body
+        name: checkin
+        required: true
+        schema:
+          $ref: '#/definitions/domains.CreateCheckinDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: User already checked in
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Check in
+      tags:
+      - user
+  /user/complete:
+    patch:
+      consumes:
+      - application/json
+      description: Update is_user_completed to true and update cocktail_id.
+      operationId: PatchUserCompleted
+      parameters:
+      - description: Cocktail id of user.
+        in: body
+        name: cocktail_id
+        required: true
+        schema:
+          $ref: '#/definitions/domains.CreateUserCompletedDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: User is already completed
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: User completed
+      tags:
+      - user
+  /user/name:
+    patch:
+      consumes:
+      - application/json
+      description: Changed user name of the user.
+      operationId: PatchUserName
+      parameters:
+      - description: Name to be changed.
+        in: body
+        name: name
+        required: true
+        schema:
+          $ref: '#/definitions/domains.CreateUserNameDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Patch user name
+      tags:
+      - user
+  /user/reset:
+    patch:
+      description: Reset is_user_completed to false and reset cocktail_id to zero
+        value.
+      operationId: ResetComplete
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Reset complete
+      tags:
+      - user
+  /user/signin:
+    post:
+      description: Return user data and create a user if the user is signing in for
+        the first time.
+      operationId: SignIn
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.SuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Sign in user
+      tags:
+      - user
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and Google ID token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

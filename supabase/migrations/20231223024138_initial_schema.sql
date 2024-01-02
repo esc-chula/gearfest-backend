@@ -40,6 +40,10 @@ alter table "public"."users" add constraint "users_user_name_check" CHECK ((leng
 
 alter table "public"."users" validate constraint "users_user_name_check";
 
+alter table "public"."users" add constraint "users_user_id_check" CHECK ((length(user_id) > 0)) not valid;
+
+alter table "public"."users" validate constraint "users_user_id_check";
+
 grant delete on table "public"."checkins" to "anon";
 
 grant insert on table "public"."checkins" to "anon";
