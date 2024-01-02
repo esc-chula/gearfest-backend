@@ -27,6 +27,7 @@ type CreateCheckinDTO struct {
 type CreateUserCompletedDTO struct {
 	CocktailID uint `json:"cocktail_id" binding:"required"`
 }
+
 type CreateUserNameDTO struct {
 	UserName string `json:"user_name" binding:"required"`
 }

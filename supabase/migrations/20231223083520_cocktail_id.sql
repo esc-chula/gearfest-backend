@@ -4,4 +4,4 @@ alter table "public"."users" add constraint "users_cocktail_id_check" CHECK ((co
 
 alter table "public"."users" validate constraint "users_cocktail_id_check";
 
-
+alter table "public"."users" alter column "cocktail_id" set not null;
