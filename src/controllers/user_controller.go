@@ -35,7 +35,7 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 	}
 }
 
-func (controller *UserController) PostUser(ctx *gin.Context) {
+func (controller *UserController) SignIn(ctx *gin.Context) {
 
 	var inputUser domains.CreateUser
 	err := ctx.ShouldBindJSON(&inputUser)
@@ -55,7 +55,7 @@ func (controller *UserController) PostUser(ctx *gin.Context) {
 	ctx.JSON(201, newUser)
 }
 
-func (controller *UserController) PostCheckin(ctx *gin.Context) {
+func (controller *UserController) Checkin(ctx *gin.Context) {
 
 	//convert request into obj
 	var CheckinDTO domains.CreateCheckinDTO
@@ -101,7 +101,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 
 }
 
-func (controller *UserController) PatchUserComplete(ctx *gin.Context) {
+func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 
 	id := ctx.Param("id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)

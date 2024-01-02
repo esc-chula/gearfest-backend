@@ -18,8 +18,8 @@ func loadUserRoutes(g *gin.RouterGroup, db *gorm.DB) {
 	UserRepository := repositories.NewUserRepository(db)
 	UserController := controllers.NewUserController(UserRepository)
 	g.GET("/:id", UserController.GetUser)
-	g.POST("/create", UserController.PostUser)
-	g.POST("/checkin", UserController.PostCheckin)
-	g.PATCH("/complete/:id", UserController.PatchUserComplete)
+	g.POST("/signin", UserController.SignIn)
+	g.POST("/checkin", UserController.Checkin)
+	g.PATCH("/complete/:id", UserController.PatchUserCompleted)
 	g.PATCH("/name/:id", UserController.PatchUserName)
 }
