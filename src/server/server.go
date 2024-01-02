@@ -26,7 +26,7 @@ func New() *Server {
 	db := LoadSupabase(config.SupabaseConfig)
 
 	server := &Server{
-		router: loadRoutes(db),
+		router: loadRoutes(db, config.GoogleConfig),
 		db:     db,
 	}
 	return server

@@ -21,10 +21,22 @@ func (usecase *UserUsecases) Get(id string) (domains.User, error) {
 	return user, err
 }
 
-func (usecase *UserUsecases) Post(CheckinDTO domains.CreateCheckinDTO) (domains.Checkin, error) {
+func (usecase *UserUsecases) PostCreateUser(id string, name string) (domains.User, error) {
+
+	newUser := domains.User{
+		UserID:   id,
+		UserName: name,
+		Checkins: []domains.Checkin{},
+	}
+
+	err := usecase.UserRepository.CreateUser(&newUser)
+	return newUser, err
+}
+
+func (usecase *UserUsecases) Post(id string, CheckinDTO domains.CreateCheckinDTO) (domains.Checkin, error) {
 
 	checkin := domains.Checkin{
-		UserID:     CheckinDTO.UserID,
+		UserID:     id,
 		LocationID: CheckinDTO.LocationID,
 	}
 
@@ -48,7 +60,6 @@ func (usecase *UserUsecases) PatchUserComplete(id string, userDTO domains.Create
 	}
 	err := usecase.UserRepository.UpdateFields(&user, id, updatingMap)
 	return user, err
-
 }
 
 func (usecase *UserUsecases) PatchUserName(id string, userDTO domains.CreateUserNameDTO) (domains.User, error) {
@@ -57,5 +68,14 @@ func (usecase *UserUsecases) PatchUserName(id string, userDTO domains.CreateUser
 	}
 	err := usecase.UserRepository.UpdateField(&user, id, "user_name", userDTO.UserName)
 	return user, err
+}
 
+func (usecase *UserUsecases) ResetComplete(id string) (domains.User, error) {
+	user := domains.User{}
+	updatingMap := map[string]interface{}{
+		"is_user_completed": false,
+		"cocktail_id":       0,
+	}
+	err := usecase.UserRepository.UpdateFields(&user, id, updatingMap)
+	return user, err
 }
