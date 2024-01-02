@@ -37,16 +37,12 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 
 func (controller *UserController) PostUser(ctx *gin.Context) {
 
-	//convert request into obj
 	var inputUser domains.CreateUser
 	err := ctx.ShouldBindJSON(&inputUser)
 	if err != nil {
-		ctx.AbortWithStatusJSON(400, gin.H{
-			"Message": "Invalid JSON format",
-		})
+		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
-	//post the obj to db using userId,LocationId (checkInId auto gen)
 	newUser, err := controller.UserUsecases.PostCreateUser(inputUser)
 
 	if err != nil {

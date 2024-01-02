@@ -26,6 +26,7 @@ func (usecase *UserUsecases) PostCreateUser(inputUser domains.CreateUser) (domai
 	newUser := domains.User{
 		UserID:   inputUser.UserID,
 		UserName: inputUser.UserName,
+		Checkins: []domains.Checkin{},
 	}
 
 	err := usecase.UserRepository.CreateUser(&newUser)
