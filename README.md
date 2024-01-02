@@ -26,7 +26,7 @@ Backend interface for the GearFestival website.
 
    > Note: If there are no tables on the database, please run `supabase db reset` to apply migrations.
 
-Ensure to run `supabase stop` to close supabase after finishing your code. If there are migrations that haven't been applied to supabase, please run `supabase db reset` to apply migrations.
+Ensure to run `supabase stop` to close supabase after finishing your code.
 
 ## Contributing
 
