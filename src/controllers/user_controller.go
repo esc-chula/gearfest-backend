@@ -24,7 +24,7 @@ func NewUserController(repository usecases.UserRepository) *UserController {
 
 // GetUser godoc
 // @summary Get user
-// @description Get user data domains.User.
+// @description Get user data.
 // @tags user
 // @id GetUser
 // @security Bearer

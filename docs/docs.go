@@ -22,7 +22,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Get user data domains.User.",
+                "description": "Get user data.",
                 "produces": [
                     "application/json"
                 ],

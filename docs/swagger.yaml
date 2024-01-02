@@ -50,7 +50,7 @@ info:
 paths:
   /user:
     get:
-      description: Get user data domains.User.
+      description: Get user data.
       operationId: GetUser
       produces:
       - application/json
