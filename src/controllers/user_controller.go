@@ -36,7 +36,7 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) SignIn(ctx *gin.Context) {
-	var inputUser domains.CreateUser
+	var inputUser domains.CreateUserDTO
 	err := ctx.ShouldBindJSON(&inputUser)
 	if err != nil {
 		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")

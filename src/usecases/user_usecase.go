@@ -21,7 +21,7 @@ func (usecase *UserUsecases) Get(id string) (domains.User, error) {
 	return user, err
 }
 
-func (usecase *UserUsecases) PostCreateUser(inputUser domains.CreateUser) (domains.User, error) {
+func (usecase *UserUsecases) PostCreateUser(inputUser domains.CreateUserDTO) (domains.User, error) {
 
 	newUser := domains.User{
 		UserID:   inputUser.UserID,
