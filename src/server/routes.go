@@ -22,4 +22,5 @@ func loadUserRoutes(g *gin.RouterGroup, db *gorm.DB) {
 	g.POST("/checkin", UserController.Checkin)
 	g.PATCH("/complete/:id", UserController.PatchUserCompleted)
 	g.PATCH("/name/:id", UserController.PatchUserName)
+	g.PATCH("/reset/:id", UserController.Reset)
 }

@@ -60,7 +60,6 @@ func (usecase *UserUsecases) PatchUserComplete(id string, userDTO domains.Create
 	}
 	err := usecase.UserRepository.UpdateFields(&user, id, updatingMap)
 	return user, err
-
 }
 
 func (usecase *UserUsecases) PatchUserName(id string, userDTO domains.CreateUserNameDTO) (domains.User, error) {
@@ -69,5 +68,14 @@ func (usecase *UserUsecases) PatchUserName(id string, userDTO domains.CreateUser
 	}
 	err := usecase.UserRepository.UpdateField(&user, id, "user_name", userDTO.UserName)
 	return user, err
+}
 
+func (usecase *UserUsecases) ResetComplete(id string) (domains.User, error) {
+	user := domains.User{}
+	updatingMap := map[string]interface{}{
+		"is_user_completed": false,
+		"cocktail_id":       0,
+	}
+	err := usecase.UserRepository.UpdateFields(&user, id, updatingMap)
+	return user, err
 }

@@ -36,7 +36,6 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) SignIn(ctx *gin.Context) {
-
 	var inputUser domains.CreateUser
 	err := ctx.ShouldBindJSON(&inputUser)
 	if err != nil {
@@ -61,7 +60,6 @@ func (controller *UserController) SignIn(ctx *gin.Context) {
 }
 
 func (controller *UserController) Checkin(ctx *gin.Context) {
-
 	//convert request into obj
 	var CheckinDTO domains.CreateCheckinDTO
 	err := ctx.ShouldBindJSON(&CheckinDTO)
@@ -84,7 +82,6 @@ func (controller *UserController) Checkin(ctx *gin.Context) {
 }
 
 func (controller *UserController) PatchUserName(ctx *gin.Context) {
-
 	id := ctx.Param("id")
 	//convert request into obj
 	var requestDTO domains.CreateUserNameDTO
@@ -103,11 +100,9 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 	default:
 		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 	}
-
 }
 
 func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
-
 	id := ctx.Param("id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
 	switch err {
@@ -135,4 +130,17 @@ func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 		return
 	}
 	utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": patchedUser})
+}
+
+func (controller *UserController) Reset(ctx *gin.Context) {
+	id := ctx.Param("id")
+	patchedUser, err := controller.UserUsecases.ResetComplete(id)
+	switch err {
+	case nil:
+		utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": patchedUser})
+	case gorm.ErrRecordNotFound:
+		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+	default:
+		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
+	}
 }
