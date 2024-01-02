@@ -33,10 +33,10 @@ func (usecase *UserUsecases) PostCreateUser(id string, name string) (domains.Use
 	return newUser, err
 }
 
-func (usecase *UserUsecases) Post(CheckinDTO domains.CreateCheckinDTO) (domains.Checkin, error) {
+func (usecase *UserUsecases) Post(id string, CheckinDTO domains.CreateCheckinDTO) (domains.Checkin, error) {
 
 	checkin := domains.Checkin{
-		UserID:     CheckinDTO.UserID,
+		UserID:     id,
 		LocationID: CheckinDTO.LocationID,
 	}
 

@@ -13,10 +13,10 @@ import (
 
 func Validation(cfg config.GoogleConfig) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authorization");
+		token := ctx.GetHeader("Authorization")
 		if token != "" && strings.HasPrefix(token, "Bearer ") {
 			token := strings.TrimPrefix(token, "Bearer ")
-			payload, err := idtoken.Validate(context.Background(), token, cfg.ClientID);
+			payload, err := idtoken.Validate(context.Background(), token, cfg.ClientID)
 			if err != nil || cfg.ClientID != payload.Audience {
 				utils.HandleErrorResponse(ctx, http.StatusUnauthorized, "Invalid token.")
 				return

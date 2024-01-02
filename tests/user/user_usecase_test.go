@@ -13,7 +13,7 @@ import (
 
 type UserUsecasesTest struct {
 	suite.Suite
-	User *domains.User
+	User          *domains.User
 	CompletedUser *domains.User
 }
 
@@ -38,7 +38,7 @@ func (suite *UserUsecasesTest) SetupTest() {
 		UserID:          uuid.NewString(),
 		UserName:        "Test Test",
 		IsUserCompleted: true,
-		CocktailID: 10,
+		CocktailID:      10,
 		Checkins:        []domains.Checkin{checkin},
 	}
 }
@@ -77,11 +77,10 @@ func (suite *UserUsecasesTest) TestCheckinSuccess() {
 		UserRepository: repo,
 	}
 	checkinDTO := domains.CreateCheckinDTO{
-		UserID:     suite.User.UserID,
 		LocationID: 2,
 	}
-	checkinInput := &domains.Checkin {
-		UserID: suite.User.UserID,
+	checkinInput := &domains.Checkin{
+		UserID:     suite.User.UserID,
 		LocationID: 2,
 	}
 	checkin := &domains.Checkin{
@@ -90,7 +89,7 @@ func (suite *UserUsecasesTest) TestCheckinSuccess() {
 		LocationID: 2,
 	}
 	repo.On("Checkin", checkinInput).Return(checkin, nil)
-	newCheckin, err := usecase.Post(checkinDTO)
+	newCheckin, err := usecase.Post(suite.User.UserID, checkinDTO)
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), newCheckin, *checkin)
 }
@@ -101,15 +100,14 @@ func (suite *UserUsecasesTest) TestAlreadyCheckin() {
 		UserRepository: repo,
 	}
 	checkinDTO := domains.CreateCheckinDTO{
+		LocationID: 0,
+	}
+	checkinInput := &domains.Checkin{
 		UserID:     suite.User.UserID,
 		LocationID: 0,
 	}
-	checkinInput := &domains.Checkin {
-		UserID: suite.User.UserID,
-		LocationID: 0,
-	}
 	repo.On("Checkin", checkinInput).Return(nil, errors.New("User already checked in."))
-	_, err := usecase.Post(checkinDTO)
+	_, err := usecase.Post(suite.User.UserID, checkinDTO)
 	assert.NotNil(suite.T(), err)
 }
 
@@ -126,15 +124,14 @@ func (suite *UserUsecasesTest) TestCheckinUserNotFound() {
 		}
 	}
 	checkinDTO := domains.CreateCheckinDTO{
+		LocationID: 1,
+	}
+	checkinInput := &domains.Checkin{
 		UserID:     id,
 		LocationID: 1,
 	}
-	checkinInput := &domains.Checkin {
-		UserID: id,
-		LocationID: 1,
-	}
 	repo.On("Checkin", checkinInput).Return(nil, errors.New("User not found."))
-	_, err := usecase.Post(checkinDTO)
+	_, err := usecase.Post(id, checkinDTO)
 	assert.NotNil(suite.T(), err)
 }
 
@@ -280,16 +277,16 @@ func (suite *UserUsecasesTest) TestCreateUserSuccess() {
 	}
 	name := "test test"
 	createUserInput := &domains.User{
-		UserID: id,
+		UserID:   id,
 		UserName: name,
 		Checkins: []domains.Checkin{},
 	}
 	newUser := domains.User{
-		UserID: id,
-		UserName: name,
+		UserID:          id,
+		UserName:        name,
 		IsUserCompleted: false,
-		CocktailID: 0,
-		Checkins: []domains.Checkin{},
+		CocktailID:      0,
+		Checkins:        []domains.Checkin{},
 	}
 	repo.On("CreateUser", createUserInput).Return(&newUser, nil)
 	user, err := usecase.PostCreateUser(id, name)
@@ -305,7 +302,7 @@ func (suite *UserUsecasesTest) TestCreateUserAlreadyCreated() {
 	id := suite.User.UserID
 	name := "test test"
 	createUserInput := &domains.User{
-		UserID: id,
+		UserID:   id,
 		UserName: name,
 		Checkins: []domains.Checkin{},
 	}
@@ -320,8 +317,8 @@ func (suite *UserUsecasesTest) TestResetSuccess() {
 		UserRepository: repo,
 	}
 	expected := suite.CompletedUser
-	expected.CocktailID=0
-	expected.IsUserCompleted=false
+	expected.CocktailID = 0
+	expected.IsUserCompleted = false
 	updatingMap := map[string]interface{}{
 		"is_user_completed": false,
 		"cocktail_id":       0,

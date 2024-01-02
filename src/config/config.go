@@ -22,7 +22,7 @@ type GoogleConfig struct {
 
 type Config struct {
 	SupabaseConfig SupabaseConfig `mapstructure:"supabase"`
-	GoogleConfig GoogleConfig `mapstructure:"google"`
+	GoogleConfig   GoogleConfig   `mapstructure:"google"`
 }
 
 func New() (*Config, error) {

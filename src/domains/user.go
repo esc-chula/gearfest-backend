@@ -1,22 +1,21 @@
 package domains
 
 type User struct {
-	UserID          string `gorm:"primaryKey"`
-	UserName        string
-	IsUserCompleted bool
-	CocktailID      uint
-	Checkins        []Checkin
+	UserID          string    `json:"user_id" gorm:"primaryKey"`
+	UserName        string    `json:"user_name"`
+	IsUserCompleted bool      `json:"is_user_completed"`
+	CocktailID      uint      `json:"cocktail_id"`
+	Checkins        []Checkin `json:"checkins"`
 }
 
 type Checkin struct {
-	CheckinID  uint `gorm:"primaryKey;autoincrement"`
-	UserID     string
-	LocationID uint
+	CheckinID  uint   `json:"checkin_id" gorm:"primaryKey;autoincrement"`
+	UserID     string `json:"user_id"`
+	LocationID uint   `json:"location_id"`
 }
 
 type CreateCheckinDTO struct {
-	UserID     string
-	LocationID uint   `json:"location_id" binding:"required"`
+	LocationID uint `json:"location_id" binding:"required"`
 }
 
 type CreateUserCompletedDTO struct {

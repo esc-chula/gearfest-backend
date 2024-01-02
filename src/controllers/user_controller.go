@@ -22,6 +22,19 @@ func NewUserController(repository usecases.UserRepository) *UserController {
 	}
 }
 
+// GetUser godoc
+// @summary Get user
+// @description Get user data domains.User.
+// @tags user
+// @id GetUser
+// @security Bearer
+// @produce json
+// @Success 200 {object} utils.SuccessResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user [get]
 func (controller *UserController) GetUser(ctx *gin.Context) {
 	id := ctx.GetString("user_id")
 	user, err := controller.UserUsecases.Get(id)
@@ -35,6 +48,19 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 	}
 }
 
+// SignIn godoc
+// @summary Sign in user
+// @description Return user data and create a user if the user is signing in for the first time.
+// @tags user
+// @id SignIn
+// @security Bearer
+// @produce json
+// @Success 200 {object} utils.SuccessResponse
+// @Success 201 {object} utils.SuccessResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user/signin [post]
 func (controller *UserController) SignIn(ctx *gin.Context) {
 	id := ctx.GetString("user_id")
 	name := ctx.GetString("user_google_name")
@@ -55,6 +81,23 @@ func (controller *UserController) SignIn(ctx *gin.Context) {
 	}
 }
 
+// Checkin godoc
+// @summary Check in
+// @description Check in user with location id.
+// @tags user
+// @id Checkin
+// @security Bearer
+// @accept json
+// @produce json
+// @param checkin body domains.CreateCheckinDTO true "Location id to be checked in."
+// @Success 201 {object} utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      409  {object}  utils.ErrorResponse "User already checked in"
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user/checkin [post]
 func (controller *UserController) Checkin(ctx *gin.Context) {
 	//convert request into obj
 	id := ctx.GetString("user_id")
@@ -64,9 +107,8 @@ func (controller *UserController) Checkin(ctx *gin.Context) {
 		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
-	CheckinDTO.UserID = id
 	//post the obj to db using userId,LocationId (checkInId auto gen)
-	newCheckin, err := controller.UserUsecases.Post(CheckinDTO)
+	newCheckin, err := controller.UserUsecases.Post(id, CheckinDTO)
 	switch err {
 	case nil:
 		utils.RespondWithData(ctx, http.StatusCreated, gin.H{"checkin": newCheckin})
@@ -79,6 +121,22 @@ func (controller *UserController) Checkin(ctx *gin.Context) {
 	}
 }
 
+// PatchUserName godoc
+// @summary Patch user name
+// @description Changed user name of the user.
+// @tags user
+// @id PatchUserName
+// @security Bearer
+// @accept json
+// @produce json
+// @param name body domains.CreateUserNameDTO true "Name to be changed."
+// @Success 200 {object} utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user/name [patch]
 func (controller *UserController) PatchUserName(ctx *gin.Context) {
 	id := ctx.GetString("user_id")
 	//convert request into obj
@@ -100,13 +158,30 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 	}
 }
 
+// PatchUserCompleted godoc
+// @summary User completed
+// @description Update is_user_completed to true and update cocktail_id.
+// @tags user
+// @id PatchUserCompleted
+// @security Bearer
+// @accept json
+// @produce json
+// @param cocktail_id body domains.CreateUserCompletedDTO true "Cocktail id of user."
+// @Success 200 {object} utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      409  {object}  utils.ErrorResponse "User is already completed"
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user/complete [patch]
 func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 	id := ctx.GetString("user_id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
 	switch err {
 	case nil:
 		if isUserCompleted {
-			utils.HandleErrorResponse(ctx, http.StatusForbidden, "User has already completed.")
+			utils.HandleErrorResponse(ctx, http.StatusConflict, "User has already completed.")
 			return
 		}
 	case gorm.ErrRecordNotFound:
@@ -132,6 +207,20 @@ func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 	utils.RespondWithData(ctx, http.StatusOK, gin.H{"user": patchedUser})
 }
 
+// ResetComplete godoc
+// @summary Reset complete
+// @description Reset is_user_completed to false and reset cocktail_id to zero value.
+// @tags user
+// @id ResetComplete
+// @security Bearer
+// @produce json
+// @Success 200 {object} utils.SuccessResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router /user/reset [patch]
 func (controller *UserController) Reset(ctx *gin.Context) {
 	id := ctx.GetString("user_id")
 	patchedUser, err := controller.UserUsecases.ResetComplete(id)
