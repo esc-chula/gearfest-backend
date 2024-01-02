@@ -23,7 +23,7 @@ func NewUserController(repository usecases.UserRepository) *UserController {
 }
 
 func (controller *UserController) GetUser(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.GetString("user_id")
 	user, err := controller.UserUsecases.Get(id)
 	switch err {
 	case nil:
@@ -36,16 +36,12 @@ func (controller *UserController) GetUser(ctx *gin.Context) {
 }
 
 func (controller *UserController) SignIn(ctx *gin.Context) {
-	var inputUser domains.CreateUserDTO
-	err := ctx.ShouldBindJSON(&inputUser)
-	if err != nil {
-		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
-		return
-	}
-	user, err := controller.UserUsecases.Get(inputUser.UserID)
+	id := ctx.GetString("user_id")
+	name := ctx.GetString("user_google_name")
+	user, err := controller.UserUsecases.Get(id)
 	if err == gorm.ErrRecordNotFound {
 		//Not found then create new user
-		newUser, err := controller.UserUsecases.PostCreateUser(inputUser)
+		newUser, err := controller.UserUsecases.PostCreateUser(id, name)
 		if err != nil {
 			utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
 			return
@@ -61,12 +57,14 @@ func (controller *UserController) SignIn(ctx *gin.Context) {
 
 func (controller *UserController) Checkin(ctx *gin.Context) {
 	//convert request into obj
+	id := ctx.GetString("user_id")
 	var CheckinDTO domains.CreateCheckinDTO
 	err := ctx.ShouldBindJSON(&CheckinDTO)
 	if err != nil {
 		utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Invalid JSON format.")
 		return
 	}
+	CheckinDTO.UserID = id
 	//post the obj to db using userId,LocationId (checkInId auto gen)
 	newCheckin, err := controller.UserUsecases.Post(CheckinDTO)
 	switch err {
@@ -82,7 +80,7 @@ func (controller *UserController) Checkin(ctx *gin.Context) {
 }
 
 func (controller *UserController) PatchUserName(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.GetString("user_id")
 	//convert request into obj
 	var requestDTO domains.CreateUserNameDTO
 	err := ctx.ShouldBindJSON(&requestDTO)
@@ -103,7 +101,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 }
 
 func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.GetString("user_id")
 	isUserCompleted, err := controller.UserUsecases.IsUserCompleted(id)
 	switch err {
 	case nil:
@@ -113,8 +111,10 @@ func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 		}
 	case gorm.ErrRecordNotFound:
 		utils.HandleErrorResponse(ctx, http.StatusNotFound, "User not found.")
+		return
 	default:
 		utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Internal server error.")
+		return
 	}
 	//convert request into obj
 	var requestDTO domains.CreateUserCompletedDTO
@@ -133,7 +133,7 @@ func (controller *UserController) PatchUserCompleted(ctx *gin.Context) {
 }
 
 func (controller *UserController) Reset(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.GetString("user_id")
 	patchedUser, err := controller.UserUsecases.ResetComplete(id)
 	switch err {
 	case nil:

@@ -278,24 +278,21 @@ func (suite *UserUsecasesTest) TestCreateUserSuccess() {
 			break
 		}
 	}
-	createUser := domains.CreateUserDTO{
-		UserID: id,
-		UserName: "test test",
-	}
+	name := "test test"
 	createUserInput := &domains.User{
 		UserID: id,
-		UserName: "test test",
+		UserName: name,
 		Checkins: []domains.Checkin{},
 	}
 	newUser := domains.User{
 		UserID: id,
-		UserName: "test test",
+		UserName: name,
 		IsUserCompleted: false,
 		CocktailID: 0,
 		Checkins: []domains.Checkin{},
 	}
 	repo.On("CreateUser", createUserInput).Return(&newUser, nil)
-	user, err := usecase.PostCreateUser(createUser)
+	user, err := usecase.PostCreateUser(id, name)
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), user, newUser)
 }
@@ -306,17 +303,14 @@ func (suite *UserUsecasesTest) TestCreateUserAlreadyCreated() {
 		UserRepository: repo,
 	}
 	id := suite.User.UserID
-	createUser := domains.CreateUserDTO{
-		UserID: id,
-		UserName: "test test",
-	}
+	name := "test test"
 	createUserInput := &domains.User{
 		UserID: id,
-		UserName: "test test",
+		UserName: name,
 		Checkins: []domains.Checkin{},
 	}
 	repo.On("CreateUser", createUserInput).Return(nil, errors.New("User already created."))
-	_, err := usecase.PostCreateUser(createUser)
+	_, err := usecase.PostCreateUser(id, name)
 	assert.NotNil(suite.T(), err)
 }
 

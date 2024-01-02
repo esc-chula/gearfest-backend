@@ -6,3 +6,5 @@ supabase:
   port: "54322"
   sslmode: disable
   schema: public
+google:
+  client_id: <client_id>

@@ -16,8 +16,13 @@ type SupabaseConfig struct {
 	Schema   string `mapstructure:"schema"`
 }
 
+type GoogleConfig struct {
+	ClientID string `mapstructure:"client_id"`
+}
+
 type Config struct {
 	SupabaseConfig SupabaseConfig `mapstructure:"supabase"`
+	GoogleConfig GoogleConfig `mapstructure:"google"`
 }
 
 func New() (*Config, error) {
