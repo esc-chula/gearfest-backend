@@ -19,6 +19,10 @@ func LoadSupabase(config config.SupabaseConfig) *gorm.DB {
 		config.SSLMode,
 	)
 
+	if config.SSLMode != "disable" {
+		dsn += fmt.Sprintf(" sslrootcert=%s", config.SSLRoot)
+	}
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{TranslateError: true})
 	if err != nil {
 		fmt.Printf("Error connecting to the database: %v\n", err)
