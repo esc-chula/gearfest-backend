@@ -19,6 +19,11 @@ func loadRoutes(db *gorm.DB, cfg config.GoogleConfig) *gin.Engine {
 	corsConfig.AllowCredentials = true
 	corsConfig.AllowAllOrigins = true
 	g.Use(cors.New(corsConfig))
+	g.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "test",
+		})
+	})
 	userRoutes := g.Group("/user")
 	userRoutes.Use(Validation(cfg))
 	loadUserRoutes(userRoutes, db)

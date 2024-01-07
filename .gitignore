@@ -8,3 +8,5 @@ config.yaml
 # coverage report
 coverage.out
 coverage.html
+
+/cert
