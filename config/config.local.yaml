@@ -1,10 +1,12 @@
-supabase:
+supabase_db:
   host: 127.0.0.1
   user: postgres
   password: postgres
   dbname: postgres
-  port: "54322"
+  port: 54322
   sslmode: disable
+  sslroot: <sslroot>
   schema: public
-google:
-  client_id: <client_id>
+supabase_client:
+  supabase_url: <supabase_url>
+  supabase_key: <supabase_key>

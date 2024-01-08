@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func LoadSupabase(config config.SupabaseConfig) *gorm.DB {
+func LoadSupabase(config config.SupabaseDatabaseConfig) *gorm.DB {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		config.Host,
 		config.User,

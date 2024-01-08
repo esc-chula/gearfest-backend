@@ -295,7 +295,7 @@ paths:
       - user
 securityDefinitions:
   Bearer:
-    description: Type "Bearer" followed by a space and Google ID token.
+    description: Type "Bearer" followed by a space and Supabase access token.
     in: header
     name: Authorization
     type: apiKey

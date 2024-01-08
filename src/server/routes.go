@@ -2,17 +2,17 @@ package server
 
 import (
 	_ "github.com/esc-chula/gearfest-backend/docs"
-	"github.com/esc-chula/gearfest-backend/src/config"
 	"github.com/esc-chula/gearfest-backend/src/controllers"
 	"github.com/esc-chula/gearfest-backend/src/server/repositories"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	supa "github.com/nedpals/supabase-go"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
-func loadRoutes(db *gorm.DB, cfg config.GoogleConfig) *gin.Engine {
+func loadRoutes(db *gorm.DB, supabase *supa.Client) *gin.Engine {
 	g := gin.New()
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "Authorization")
@@ -25,7 +25,7 @@ func loadRoutes(db *gorm.DB, cfg config.GoogleConfig) *gin.Engine {
 		})
 	})
 	userRoutes := g.Group("/user")
-	userRoutes.Use(Validation(cfg))
+	userRoutes.Use(Validation(supabase))
 	loadUserRoutes(userRoutes, db)
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return g
