@@ -465,7 +465,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "Bearer": {
-            "description": "Type \"Bearer\" followed by a space and Google ID token.",
+            "description": "Type \"Bearer\" followed by a space and Supabase access token.",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

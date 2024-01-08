@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type SupabaseConfig struct {
+type SupabaseDatabaseConfig struct {
 	Host     string `mapstructure:"host"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
@@ -17,13 +17,14 @@ type SupabaseConfig struct {
 	Schema   string `mapstructure:"schema"`
 }
 
-type GoogleConfig struct {
-	ClientID string `mapstructure:"client_id"`
+type SupabaseClientConfig struct {
+	URL string `mapstructure:"supabase_url"`
+	Key string `mapstructure:"supabase_key"`
 }
 
 type Config struct {
-	SupabaseConfig SupabaseConfig `mapstructure:"supabase"`
-	GoogleConfig   GoogleConfig   `mapstructure:"google"`
+	SupabaseDatabaseConfig SupabaseDatabaseConfig `mapstructure:"supabase_db"`
+	SupabaseClientConfig   SupabaseClientConfig   `mapstructure:"supabase_client"`
 }
 
 func New() (*Config, error) {
