@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/esc-chula/gearfest-backend/src/config"
+	supa "github.com/nedpals/supabase-go"
 	"gorm.io/gorm"
 )
 
@@ -23,10 +24,12 @@ func New() *Server {
 		os.Exit(0)
 	}
 
-	db := LoadSupabase(config.SupabaseConfig)
+	supabase := supa.CreateClient(config.SupabaseClientConfig.URL, config.SupabaseClientConfig.Key)
+
+	db := LoadSupabase(config.SupabaseDatabaseConfig)
 
 	server := &Server{
-		router: loadRoutes(db, config.GoogleConfig),
+		router: loadRoutes(db, supabase),
 		db:     db,
 	}
 	return server

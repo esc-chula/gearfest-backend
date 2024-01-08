@@ -10,13 +10,13 @@ import (
 	"github.com/esc-chula/gearfest-backend/src/server"
 )
 
-// @title Gearfest API
-// @version 1.0
-// @description API for the GearFestival website
-// @securityDefinitions.apikey Bearer
-// @in header
-// @name Authorization
-// @description Type "Bearer" followed by a space and Google ID token.
+// @title						Gearfest API
+// @version					1.0
+// @description				API for the GearFestival website
+// @securityDefinitions.apikey	Bearer
+// @in							header
+// @name						Authorization
+// @description				Type "Bearer" followed by a space and Supabase access token.
 func main() {
 	server := server.New()
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, os.Interrupt, syscall.SIGTERM)

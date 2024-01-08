@@ -12,8 +12,7 @@ Backend interface for the GearFestival website.
 
 1. Clone this repo.
 2. Copy `config.local.yaml` in `config` and paste it in the same directory with `.local` removed from its name.
-3. Replace `<client_id>` with your Google OAuth client id in `config.yaml`.
-4. Run `go mod download` to download all the dependencies.
+3. Run `go mod download` to download all the dependencies.
 
 ## Running
 
@@ -21,8 +20,9 @@ Backend interface for the GearFestival website.
 
    > Note: You have to install [Docker](https://docs.docker.com/get-docker/) and [Supabase CLI](https://github.com/supabase/cli) before running this command.
 
-2. Run `go run ./src/` to start server.
-3. The server should be running on `localhost:8080`, `localhost:8080/swagger/index.html` for Swagger UI, and `localhost:54323/project/default/editor` for database editor.
+2. Replace `<supabase_url>` and `<supabase_key>` in `config.yaml` with your Supabase API URL and anon key.
+3. Run `go run ./src/` to start server.
+4. The server should be running on `localhost:8080`, `localhost:8080/swagger/index.html` for Swagger UI, and `localhost:54323/project/default/editor` for database editor.
 
    > Note: If there are no tables on the database, please run `supabase db reset` to apply migrations.
 
