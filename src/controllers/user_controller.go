@@ -86,7 +86,7 @@ func (controller *UserController) SignIn(ctx *gin.Context) {
 // Checkin godoc
 //
 //	@summary		Check in
-//	@description	Check in user with location id.
+//	@description	Check in the user with location id.
 //	@tags			user
 //	@id				Checkin
 //	@security		Bearer
@@ -165,7 +165,7 @@ func (controller *UserController) PatchUserName(ctx *gin.Context) {
 // PatchUserCompleted godoc
 //
 //	@summary		User completed
-//	@description	Update is_user_completed to true and update cocktail_id.
+//	@description	Set is_user_completed to true and update cocktail_id with a non-zero value.
 //	@tags			user
 //	@id				PatchUserCompleted
 //	@security		Bearer

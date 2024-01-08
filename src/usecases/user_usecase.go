@@ -37,7 +37,7 @@ func (usecase *UserUsecases) Post(id string, CheckinDTO domains.CreateCheckinDTO
 
 	checkin := domains.Checkin{
 		UserID:     id,
-		LocationID: CheckinDTO.LocationID,
+		LocationID: *CheckinDTO.LocationID,
 	}
 
 	err := usecase.UserRepository.Checkin(&checkin)

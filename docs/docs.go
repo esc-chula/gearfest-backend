@@ -72,7 +72,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Check in user with location id.",
+                "description": "Check in the user with location id.",
                 "consumes": [
                     "application/json"
                 ],
@@ -148,7 +148,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Update is_user_completed to true and update cocktail_id.",
+                "description": "Set is_user_completed to true and update cocktail_id with a non-zero value.",
                 "consumes": [
                     "application/json"
                 ],
