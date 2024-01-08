@@ -84,7 +84,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Check in user with location id.
+      description: Check in the user with location id.
       operationId: Checkin
       parameters:
       - description: Location id to be checked in.
@@ -133,7 +133,8 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Update is_user_completed to true and update cocktail_id.
+      description: Set is_user_completed to true and update cocktail_id with a non-zero
+        value.
       operationId: PatchUserCompleted
       parameters:
       - description: Cocktail id of user.
