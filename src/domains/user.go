@@ -15,7 +15,7 @@ type Checkin struct {
 }
 
 type CreateCheckinDTO struct {
-	LocationID uint `json:"location_id" binding:"required"`
+	LocationID *uint `json:"location_id" binding:"required"`
 }
 
 type CreateUserCompletedDTO struct {

@@ -76,8 +76,9 @@ func (suite *UserUsecasesTest) TestCheckinSuccess() {
 	usecase := usecases.UserUsecases{
 		UserRepository: repo,
 	}
+	var locationID uint = 2
 	checkinDTO := domains.CreateCheckinDTO{
-		LocationID: 2,
+		LocationID: &locationID,
 	}
 	checkinInput := &domains.Checkin{
 		UserID:     suite.User.UserID,
@@ -99,8 +100,9 @@ func (suite *UserUsecasesTest) TestAlreadyCheckin() {
 	usecase := usecases.UserUsecases{
 		UserRepository: repo,
 	}
+	var locationID uint = 0
 	checkinDTO := domains.CreateCheckinDTO{
-		LocationID: 0,
+		LocationID: &locationID,
 	}
 	checkinInput := &domains.Checkin{
 		UserID:     suite.User.UserID,
@@ -123,8 +125,9 @@ func (suite *UserUsecasesTest) TestCheckinUserNotFound() {
 			break
 		}
 	}
+	var locationID uint = 1
 	checkinDTO := domains.CreateCheckinDTO{
-		LocationID: 1,
+		LocationID: &locationID,
 	}
 	checkinInput := &domains.Checkin{
 		UserID:     id,
